@@ -1,0 +1,78 @@
+﻿@page "/counter"
+@using System.Threading;
+
+<h1>Counter</h1>
+
+<p>Current count: @DemoState.CurrentValue</p>
+
+<button class="btn btn-w-m btn-success" @onclick="IncrementCount">Click me</button>
+
+<div>Current Value = @currentValue;</div>
+<div>Refresh Count = @refreshCount;</div>
+
+<div>@message</div>
+
+@code {
+    string message;
+    int currentValue = 0;
+
+    private void IncrementCount()
+    {
+         DemoState.CurrentValue += @DemoState.IncrementValue;
+        currentValue = DemoState.CurrentValue;
+        SetMessage($"{ this.GetType().ToString()} == {DemoState.CurrentValue}");
+        this.StateHasChanged();
+
+    }
+
+    int refreshCount = 0;
+    Timer pageRefreshTimer;
+
+
+    protected override void OnInitialized()
+    {
+        StartCountdown();
+    }
+
+    void StartCountdown()
+    {
+        var autoEvent = new AutoResetEvent(false);
+
+        {
+            pageRefreshTimer = new Timer(new TimerCallback(_ =>
+            {
+                refreshCount++;
+                if (currentValue != DemoState.CurrentValue)
+                {
+                    currentValue = DemoState.CurrentValue;
+                    SetMessage($"Updating Current Value = {DemoState.CurrentValue}");
+                }
+                InvokeAsync(() =>
+                {
+                    // Inform Blazor to reload the page
+                    this.StateHasChanged();
+                });
+            }), null, 1000, 1000);
+        }
+    }
+
+    [Parameter]
+    public int IncrementAmount
+    {
+        get
+        {
+            return @DemoState.IncrementValue;
+        }
+
+        set
+        {
+            DemoState.IncrementValue = value;
+        }
+    }
+
+
+    private void SetMessage(string m)
+    {
+        message += "\n" + m;
+    }
+}

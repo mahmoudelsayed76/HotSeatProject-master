@@ -1,0 +1,16 @@
+﻿@inject AppBase AB
+@page "/"
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+<input @bind-value="incAmount" class="form-control" />
+
+<Counter IncrementAmount="@incAmount"></Counter>
+
+@code {
+    int incAmount = 4;
+}

@@ -1,0 +1,29 @@
+﻿@page "/admin"
+@inject AppBase AB
+@using SpotOn.DAL
+@using SpotOn.DAL.Models
+
+<h1>Admin</h1>
+
+
+<div>@((MarkupString)message)</div>
+
+@code {
+
+    string  message="";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ShowEnvironment();
+    }
+
+    private void ShowEnvironment()
+    {
+        message = message.Append($"GetCurrentDirectory = {System.IO.Directory.GetCurrentDirectory()}");
+        message = message.Append($"DEFAULT_SPEECH_RECOG_TIMEOUT_MS = {AppBase.DEFAULT_SPEECH_RECOG_TIMEOUT_MS} ms");
+        message = message.Append($"AB.StorageDirectory = {AB.StorageDirectory} ");
+        message = message.Append($"ORM.Lesson.DbPath= {ORM.Lesson.DbPath} ");
+    }
+
+}

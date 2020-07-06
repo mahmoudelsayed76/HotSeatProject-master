@@ -1,0 +1,56 @@
+﻿@page "/Video"
+
+@inherits VideoBase
+<div class="row align-items-center justify-content-center">
+    <div class="col-md-8  ibox-content text-center" style="height:50%">
+        <div class="ibox ">
+            <div class="ibox-content">
+                <figure>
+                    <div class="card" style="width: 40rem; height: 40rem">
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-md-6">
+                                <video id="gum" playsinline autoplay muted></video>
+
+                            </div>
+                            <div class="col-md-6">
+                                <video id="recorded" playsinline loop></video>
+
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card-body">
+                                    <div>
+                                        <button type="button" class="btn btn-primary" id="start">Start camera</button>
+                                        <button type="button" class="btn btn-danger" id="record" disabled>Start Recording</button>
+                                        <button type="button" class="btn btn-success" id="play" disabled>Play</button>
+                                        <button type="button" class="btn btn-info" id="download" disabled>Download</button>
+                                        <label id="lblbase64" style="display:none"></label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span id="errorMsg"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </figure>
+            </div>
+        </div>
+    </div>
+</div>
+<input name="__RequestVerificationToken" id="RequestVerificationToken" type="hidden" value="CfDJ8KW5cuB058RCnNyZSLI7AUjUAtTwe54jQ4Z9Goyn3WKPcpVFYSFUM5J-JDFC3E-MZIUcyR0UnbrvrC_sHv6MbUONStuIMhqDc7i00pQiGkrzf3hK6t5gZFVrjUpyAcargow4zvKU_ISjdPfoLTNF588" />
+<button type="button" class="btn btn-primary" @onclick="TriggerJsPrompt">
+    Trigger JavaScript Prompt
+</button>
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+
+@code { public async Task TriggerJsPrompt()
+    {
+        var name = await JSRuntime.InvokeAsync<string>(
+                "Video.startRecording");
+
+
+
+    } }
+

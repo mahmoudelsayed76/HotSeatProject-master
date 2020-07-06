@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cointeco.CommonBase" Version="0.9.5.32-alpha" />
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.10.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SpotOn.DAL\SpotOn.DAL.csproj" />
+  </ItemGroup>
+
+</Project>

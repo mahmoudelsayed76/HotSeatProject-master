@@ -1,0 +1,145 @@
+﻿
+
+@inject NavigationManager NavigationManager
+
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li class="nav-header">
+                <div class="profile-element">
+                    <a class="navbar-brand" href="">SpotOn Hotseat</a>
+                </div>
+                <div class="logo-element">
+                    SH
+                </div>
+            </li>
+            <li class="active">
+                <a href=""><i class="fa fa-home"></i> <span class="nav-label" data-i18n="nav.layouts">Home</span></a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" @onclick="@(()=>Navigate("video"))"><i class="fa fa-video-camera"></i> <span class="nav-label" data-i18n="nav.counter">Video</span></a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" @onclick="@(()=>Navigate("counter"))"><i class="fa fa-plus"></i> <span class="nav-label" data-i18n="nav.counter">Counter</span></a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" @onclick="@(()=>Navigate("fetchdata"))"><i class="fa fa-list-rich"></i> <span class="nav-label" data-i18n="nav.fetch">Fetch data</span></a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" @onclick="@(()=>Navigate("upload"))"><i class="fa fa-arrow-up"></i> <span class="nav-label" data-i18n="nav.uplouds">Upload File</span></a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" @onclick="@(()=>Navigate("admin"))"><i class="fa fa-wrench"></i> <span class="nav-label" data-i18n="nav.uplouds">Admin</span></a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" @onclick="@(()=>Navigate("userlist"))"><i class="fa fa-users"></i> <span class="nav-label" data-i18n="nav.userList">User List</span></a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" @onclick="@(()=>Navigate("userprofile"))"><i class="fa fa-user"></i> <span class="nav-label" data-i18n="nav.user">User Profile</span></a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" @onclick="@(()=>Navigate("question"))"><i class="fa fa-question-circle"></i> <span class="nav-label" data-i18n="nav.question">Questions</span></a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" @onclick="@(()=>Navigate("system"))"><i class="fa fa-cog"></i> <span class="nav-label" data-i18n="nav.question">System</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+@*<div>NavMenuCssClass=@NavMenuCssClass</div>
+    <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+        <ul class="nav flex-column">
+            <li class="nav-item px-3">
+
+            </li>
+            <li class="nav-item px-3">
+
+            </li>
+            <li class="nav-item px-3">
+
+            </li>
+            <li class="nav-item px-3">
+
+            </li>
+            <li class="nav-item px-3">
+
+            </li>
+            <li class="nav-item px-3">
+
+            </li>
+            <li class="nav-item px-3">
+
+            </li>
+        </ul>
+    </div>*@
+
+@code {
+    private bool Active = true;
+    string exactUrl = string.Empty;
+
+    //private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    //private void ToggleNavMenu()
+    //{
+    //    collapseNavMenu = !collapseNavMenu;
+    //}
+    void Navigate(string Url)
+    {
+        exactUrl = string.Empty;
+        if (Url == "counter")
+        {
+            exactUrl = "counter";
+            if (NavigationManager.Uri != NavigationManager.BaseUri + exactUrl)
+                NavigationManager.NavigateTo(exactUrl);
+        }
+        if (Url == "fetchdata")
+        {
+            exactUrl = "fetchdata";
+            if (NavigationManager.Uri != NavigationManager.BaseUri + exactUrl)
+                NavigationManager.NavigateTo(exactUrl);
+        }
+        if (Url == "upload")
+        {
+            exactUrl = "upload";
+            if (NavigationManager.Uri != NavigationManager.BaseUri + exactUrl)
+                NavigationManager.NavigateTo(exactUrl);
+        }
+        if (Url == "admin")
+        {
+            exactUrl = "admin";
+            if (NavigationManager.Uri != NavigationManager.BaseUri + exactUrl)
+                NavigationManager.NavigateTo(exactUrl);
+        } 
+        if (Url == "video")
+        {
+            exactUrl = "Video";
+            if (NavigationManager.Uri != NavigationManager.BaseUri + exactUrl)
+                NavigationManager.NavigateTo(exactUrl);
+        }
+        if (Url == "userlist")
+        {
+            exactUrl = "admin/userlist";
+            if (NavigationManager.Uri != NavigationManager.BaseUri + exactUrl)
+                NavigationManager.NavigateTo(exactUrl);
+        }
+        if (Url == "userprofile")
+        {
+            exactUrl = "userprofile/0";
+            if (NavigationManager.Uri != NavigationManager.BaseUri + exactUrl)
+                NavigationManager.NavigateTo(exactUrl);
+        }
+        if (Url == "question")
+        {
+            exactUrl = "/question";
+            if (NavigationManager.Uri != NavigationManager.BaseUri + exactUrl)
+                NavigationManager.NavigateTo(exactUrl);
+        }
+        if (Url == "system")
+        {
+            exactUrl = "/system";
+            if (NavigationManager.Uri != NavigationManager.BaseUri + exactUrl)
+                NavigationManager.NavigateTo(exactUrl);
+        }
+    }
+}

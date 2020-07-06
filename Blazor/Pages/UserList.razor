@@ -1,0 +1,103 @@
+﻿@page "/admin/userlist"
+@inject AppBase AB
+@using SpotOn.DAL
+@using SpotOn.DAL.Models
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Spinner
+@* @using blazor_griddata*@
+@using Syncfusion.Blazor.DropDowns
+@using System;
+@inject NavigationManager NavigationManager
+
+<h1>User List</h1>
+<SfSpinner @ref="SpinnerObj" Target="#usergrid"></SfSpinner>
+<div id="usergrid">
+    <SfGrid DataSource="@allUsers" AllowPaging="true" AllowSorting="true">
+        <GridEvents CommandClicked="CommandClickHandler" TValue="User"></GridEvents>
+        <GridPageSettings PageSize="10" />
+        <GridColumns>
+            <GridColumn Field="@nameof(User.Status)" HeaderText="Status" Width="100" />
+            <GridColumn Field="@nameof(User.Id)" HeaderText="Id" TextAlign="TextAlign.Right" Width="50" />
+            <GridColumn Field="@nameof(User.OrgId)" HeaderText="Org ID" Width="100" />
+            <GridColumn Field="@nameof(User.CreatedDate)" HeaderText="Create Date" Format="dd MMM yy" Type="ColumnType.Date" Width="100" />
+            <GridColumn Field="@nameof(User.UserName)" HeaderText="Userame" Width="100" />
+            <GridColumn Field="@nameof(User.Role)" HeaderText="Role" Width="100" />
+            <GridColumn Field="@nameof(User.FriendlyName)" HeaderText="Full Name" Width="200" />
+            <GridColumn HeaderText="Action">
+                <GridCommandColumns>
+                    <GridCommandColumn Type="CommandButtonType.None" Title="Edit User"
+                                       ButtonOption="@(new CommandButtonOptions()
+                                                   {
+                                                       CssClass="e-success",
+                                                       IconCss = "oi oi-pencil",
+                                                       Content="Edit"
+                                                   })" />
+                </GridCommandColumns>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+</div>
+<SfButton @ref="btnNewUser" CssClass="btn btn-w-m btn-primary" OnClick="@OnNewUserClick">Add New</SfButton>
+
+<div>@((MarkupString)message)</div>
+
+@code {
+
+    string message = "";
+    SfButton btnNewUser;
+    SfSpinner SpinnerObj;
+    string target { get; set; } = "#usergrid";
+    List<User> allUsers;
+
+    protected override void OnInitialized()
+    {
+        AppBase.Logger.Information("OnInitialized(A)");
+
+        base.OnInitialized();
+        // LoadData();
+        ShowEnvironment();
+        AppBase.Logger.Information("OnInitialized(B)");
+    }
+
+
+    private async Task LoadData()
+    {
+        AppBase.Logger.Information("LoadData(A)");
+        SpinnerObj.ShowSpinner(target);
+        allUsers = ORM.User.GetAll();
+        AppBase.Logger.Information("LoadData(B)");
+        SpinnerObj.HideSpinner(target);
+        await InvokeAsync(() =>
+        {
+            this.StateHasChanged();
+        });
+        AppBase.Logger.Information("LoadData(C)");
+    }
+
+    private void OnNewUserClick(MouseEventArgs args)
+    {
+        NavigationManager.NavigateTo("/userprofile/-1");
+    }
+    public void CommandClickHandler(CommandClickEventArgs<User> args)
+    {
+        NavigationManager.NavigateTo($"/userprofile/{args.RowData.Id}");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadData();
+        }
+    }
+
+
+    private void ShowEnvironment()
+    {
+        message = message.Append($"GetCurrentDirectory = {System.IO.Directory.GetCurrentDirectory()}");
+        message = message.Append($"DEFAULT_SPEECH_RECOG_TIMEOUT_MS = {AppBase.DEFAULT_SPEECH_RECOG_TIMEOUT_MS} ms");
+        message = message.Append($"AB.StorageDirectory = {AB.StorageDirectory} ");
+        message = message.Append($"ORM.Lesson.DbPath= {ORM.Lesson.DbPath} ");
+    }
+
+}

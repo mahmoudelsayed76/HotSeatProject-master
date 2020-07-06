@@ -1,0 +1,17 @@
+﻿@page "/upload"
+
+@using System.IO;
+@using System.Diagnostics;
+
+<h3>Uploader Mark 2</h3>
+
+@inject IFileReaderService fileReaderService
+@inject IJSRuntime CurrentJSRuntime
+
+
+<h1>Video Upload</h1>
+<VideoUpload DisplayProgress="false" BufferSize="81920"/>
+
+@code {
+}
+

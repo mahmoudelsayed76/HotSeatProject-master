@@ -1,0 +1,66 @@
+﻿@using System;
+
+@*<SfDialog @bind-Visible="@IsVisible" Width="250px" ShowCloseIcon="false" IsModal="true">
+    
+    <DialogTemplates>
+        <Header>@Header</Header>
+        <Content>@Content</Content>
+    </DialogTemplates>
+    <DialogButtons>
+        <DialogButton OnClick="@OkClick">
+            <DialogButtonModel Content="OK" IsPrimary="true"></DialogButtonModel>
+        </DialogButton>
+        <DialogButton OnClick="@CancelClick">
+            <DialogButtonModel Content="Cancel"></DialogButtonModel>
+        </DialogButton>
+    </DialogButtons>
+</SfDialog>*@
+
+@code {
+
+    public string Header { get; set; } = "Confirmation";
+    public string Content { get; set; } = "Are you sure?";
+    private bool IsVisible { get; set; } = false;
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    TaskCompletionSource<bool> waitingForAction;
+
+    public async Task<bool> Confirm(string title = null, string message = null)
+    {
+        Header = title ?? Header;
+        Content = message ?? Content;
+
+        waitingForAction = new TaskCompletionSource<bool>();
+        IsVisible = true;
+
+        // tell blazor to render the UI
+        await InvokeAsync(() => this.StateHasChanged());
+
+        // Waits for completion.
+        await waitingForAction.Task.ConfigureAwait(false);
+
+        // return Yes or No
+        return waitingForAction.Task.Result;
+
+        // Use Task.WaitAny to keep the task rooted.
+        // Task.WaitAny(new[] { stopRecognition.Task });
+    }
+
+    private void OkClick()
+    {
+        this.IsVisible = false;
+        waitingForAction?.SetResult(true);
+    }
+    private void CancelClick()
+    {
+        this.IsVisible = false;
+        waitingForAction?.SetResult(false);
+    }
+
+}
+

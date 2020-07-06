@@ -1,0 +1,112 @@
+﻿@inject AppBase AB
+@inject NavigationManager NavigationManager
+@using SpotOn.DAL
+@using SpotOn.DAL.Models
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Spinner
+@using Syncfusion.Blazor.ProgressBar
+@using Syncfusion.Blazor.DropDowns
+@using SpotOn.Base
+@using System;
+
+<h1>Users</h1>
+<h2>OrgId : ALL</h2>
+
+<SfSpinner @ref="SpinnerObj" Target="#usergrid"></SfSpinner>
+<div id="usergrid">
+    <SfGrid DataSource="@allUsers" AllowPaging="true" AllowSorting="true">
+        <GridEvents CommandClicked="CommandClickHandler" TValue="User"></GridEvents>
+        <GridPageSettings PageSize="10" />
+        <GridColumns>
+            <GridColumn HeaderText="Edit" Width="50">
+                <GridCommandColumns>
+                    <GridCommandColumn Type="CommandButtonType.Edit" Title="Edit User"
+                                       ButtonOption="@(new CommandButtonOptions()
+                                                   {
+                                                       CssClass="e-success",
+                                                       IconCss = "oi oi-pencil",
+                                                   })" />
+                </GridCommandColumns>
+            </GridColumn>
+            <GridColumn HeaderText="Delete" Width="50">
+                <GridCommandColumns>
+                    <GridCommandColumn Type="CommandButtonType.Delete" Title="Delete User"
+                                       ButtonOption="@(new CommandButtonOptions()
+                                                   {
+                                                       CssClass="e-danger",
+                                                       IconCss = "oi oi-trash",
+                                                   })" />
+                </GridCommandColumns>
+            </GridColumn>
+
+            <GridColumn Field="@nameof(User.Status)" HeaderText="Status" Width="100" />
+            <GridColumn Field="@nameof(User.Id)" HeaderText="Id" TextAlign="TextAlign.Right" Width="50" />
+            <GridColumn Field="@nameof(User.OrgId)" HeaderText="Org ID" Width="100" />
+            <GridColumn Field="@nameof(User.CreatedDate)" HeaderText="Create Date" Format="dd MMM yy" Type="ColumnType.Date" Width="100" />
+            <GridColumn Field="@nameof(User.UserName)" HeaderText="Userame" Width="100" />
+            <GridColumn Field="@nameof(User.Role)" HeaderText="Role" Width="100" />
+            <GridColumn Field="@nameof(User.FriendlyName)" HeaderText="Full Name" Width="200" />
+
+        </GridColumns>
+    </SfGrid>
+</div>
+<SfButton @ref="btnNewUser" OnClick="@OnNewUserClick">Add New</SfButton>
+ 
+<OKCancelDialog @ref="confirmDelete"></OKCancelDialog>
+
+@code {
+
+    SfButton btnNewUser;
+    SfSpinner SpinnerObj;
+    OKCancelDialog confirmDelete;
+    string target { get; set; } = "#usergrid";
+    List<User> allUsers;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private async Task LoadData()
+    {
+        SpinnerObj.ShowSpinner(target);
+        allUsers = ORM.User.GetAll();
+        SpinnerObj.HideSpinner(target);
+        await InvokeAsync(() =>
+        {
+            this.StateHasChanged();
+        });
+    }
+
+    private void OnNewUserClick(MouseEventArgs args)
+    {
+        NavigationManager.NavigateTo("/userprofile/-1");
+    }
+
+    public async void CommandClickHandler(CommandClickEventArgs<User> args)
+    {
+        if (args.CommandColumn.Type == CommandButtonType.Delete)
+        {
+            var ok = await confirmDelete.Confirm("Confirm", $"Delete {args.RowData.UserName} (ID: {args.RowData.Id})?");
+            if (ok)
+            {
+                ORM.User.Delete(args.RowData.Id);
+                await LoadData();
+            }
+        }
+        else if (args.CommandColumn.Type == CommandButtonType.Edit)
+        {
+            NavigationManager.NavigateTo($"/userprofile/{args.RowData.Id}");
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadData();
+        }
+    }
+
+}
+

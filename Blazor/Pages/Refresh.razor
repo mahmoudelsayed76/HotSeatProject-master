@@ -1,0 +1,47 @@
+﻿@page "/refresh"
+@using System.Threading;
+
+<h1>@Count</h1>
+
+<button @onclick="@StartCountdown">@CountdownLabel Countdown</button>
+
+@functions {
+    private int Count { get; set; } = 10;
+    private bool isRunning = false;
+
+    private string CountdownLabel
+    {
+        get
+        {
+            return isRunning ? "Stop" : "Start";
+        }
+    }
+
+    Timer pageRefreshTimer;
+
+    void StartCountdown()
+    {
+        var autoEvent = new AutoResetEvent(false);
+
+        if (isRunning)
+        {
+            pageRefreshTimer?.Dispose();
+            isRunning = false;
+        }
+        else
+        {
+            pageRefreshTimer = new Timer(new TimerCallback(_ =>
+            {
+                Count--;
+                InvokeAsync(() =>
+                {
+                    // Note that the following line is necessary because otherwise
+                    // Blazor would not recognize the state change and not refresh the UI
+                    this.StateHasChanged();
+                });
+
+            }), null, 250, 250);
+            isRunning = true;
+        }
+    }
+}

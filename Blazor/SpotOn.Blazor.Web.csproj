@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>SpotOn.Web</AssemblyName>
+    <RootNamespace>SpotOn.Web</RootNamespace>
+    <UserSecretsId>9777915a-d06f-44cc-abdb-e0c9ab7a3bde</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cointeco.CommonBase" Version="0.9.5.32-alpha" />
+    <PackageReference Include="Microsoft.AspNet.WebPages" Version="3.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.5.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
+    <PackageReference Include="Syncfusion.Blazor" Version="18.1.0.59" />
+    <PackageReference Include="Tewr.Blazor.FileReader" Version="1.6.0.20166" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SpotOn.Base\SpotOn.Base.csproj" />
+    <ProjectReference Include="..\SpotOn.DAL\SpotOn.DAL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\" />
+    <Folder Include="Storage\" />
+  </ItemGroup>
+
+</Project>

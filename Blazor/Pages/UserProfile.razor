@@ -1,0 +1,128 @@
+﻿@page "/userprofile/{UserId:int}"
+@inject AppBase AB
+@using SpotOn.DAL
+@using SpotOn.Base
+@using SpotOn.DAL.Models
+@*@using System.ComponentModel.DataAnnotations*@
+
+<h1>User Profile</h1>
+
+<EditForm Model="@theUser" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <table>
+        <tr>
+            <td>Id</td>
+            <td><InputNumber id="name" @bind-Value="theUser.Id" /></td>
+        </tr>
+        <tr>
+            <td>Title</td>
+            <td><InputText id="name" @bind-Value="theUser.Title" /></td>
+        </tr>
+        <tr>
+            <td>Username</td>
+            <td><InputText id="name" @bind-Value="theUser.UserName" /></td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td><InputText id="name" @bind-Value="theUser.FriendlyName" /></td>
+        </tr>
+        <tr>
+            <td>Created On</td>
+            <td><InputDate id="name" @bind-Value="theUser.CreatedDate" /></td>
+        </tr>
+        <tr>
+            <td>Role</td>
+            <td>
+                <SfDropDownList TValue="int" TItem="EnumData" Placeholder="Role" DataSource="@rolesList" @bind-Value="@IntRole">
+                    <DropDownListFieldSettings Text="Name" Value="Value"></DropDownListFieldSettings>
+                </SfDropDownList>
+            </td>
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td>
+                <SfDropDownList TValue="int" TItem="EnumData" Placeholder="Status" DataSource="@statusList" @bind-Value="@IntStatus">
+                    <DropDownListFieldSettings Text="Name" Value="Value"></DropDownListFieldSettings>
+                </SfDropDownList>
+            </td>
+        </tr>
+    </table>
+
+    <SfButton Type="submit">Submit</SfButton>
+</EditForm>
+<div>@((MarkupString)message)</div>
+
+@code {
+
+    [Parameter]
+    public int UserId { get; set; }
+    private int IntRole
+    {
+        get
+        {
+            return (int)theUser?.Role;
+        }
+        set
+        {
+            if (theUser != null)
+                theUser.Role = (UserRole)value;
+        }
+    }
+
+    public int IntStatus
+    {
+        get
+        {
+            return (int)theUser?.Status;
+        }
+        set
+        {
+            if (theUser != null)
+                theUser.Status = (UserStatus)value;
+        }
+    }
+
+
+    private User theUser;
+    string message;
+
+    List<SpotOn.Base.EnumData> rolesList = AppBase.ItemizeEnum<UserRole>();
+    List<SpotOn.Base.EnumData> statusList = AppBase.ItemizeEnum<UserStatus>();
+
+    private void HandleValidSubmit()
+    {
+        ORM.User.Upsert(theUser);
+    }
+
+    protected override void OnInitialized()
+    {
+        // var userroles =
+
+        // TODO: if userid = 0, get the "current" one
+        if (UserId > 0)
+        {
+            theUser = ORM.User.Get(UserId);
+            if (theUser != null)
+            {
+                message = message.Append($"Loaded {theUser.FriendlyName} (ID = {theUser.Id})");
+                // theUser.Status = UserStatus.Active;
+            }
+        }
+
+        if (theUser is null)
+
+        {
+            theUser = new User()
+            {
+                Id = -1,
+                CreatedDate = DateTime.Now,
+                Role = UserRole.Learner
+            };
+            message = message.Append($"New User");
+        }
+
+        base.OnInitialized();
+    }
+
+}
